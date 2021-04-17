@@ -65,7 +65,7 @@ namespace RoWebTest.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                      return NotFound();
             }
 
             var movie = await _context.Movie
@@ -75,7 +75,7 @@ namespace RoWebTest.Controllers
                 return NotFound();
             }
 
-            return View(movie);
+            return  View(movie);
         }
 
         // GET: Movies/Create
@@ -98,7 +98,26 @@ namespace RoWebTest.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(movie);
+
         }
+
+        // POST: Movies/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create_Review([Bind("Id,Movie_Id,ReviewDate,Name,Text")] Reviews review)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(review);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Details));
+            }
+            return View(review);
+        }
+
+
 
         // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(int? id)

@@ -11,7 +11,8 @@ namespace RoWebTest.Models
 
         public int Id { get; set; }
         public string Movie_Id { get; set; }
-
+        public string Name{ get; set; }
+        
         [DataType(DataType.Date)]
         public DateTime ReviewDate { get; set; }
         public string Data { get; set; }
