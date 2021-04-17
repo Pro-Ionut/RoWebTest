@@ -44,5 +44,29 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to List</a>  
+</div>
+
+
+<div>
+    <hr />
+    <h4>Reviews</h4>
+    <hr />
+    <tr>
+        <td>
+            Name
+        </td>
+        <td>
+            Review
+        </td>
+        <td>
+          Review Date
+        </td>
+    </tr>
+    <hr />
+    <form method="get" action="send">
+        Name: <input type="text" name="review"><br>
+        Review: <textarea name="content" cols="50" rows="10"></textarea><br />
+        <input type="submit" value="Send" class="btn btn-primary" />
+    </form>
 </div>

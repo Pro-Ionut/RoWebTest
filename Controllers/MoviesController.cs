@@ -20,9 +20,44 @@ namespace RoWebTest.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index()
+        
+        private IQueryable<Movie> AsNoTracking()
         {
-            return View(await _context.Movie.ToListAsync());
+            throw new NotImplementedException();
+        }
+
+        public async Task<IActionResult> Index(string sortOrder, int? pageNumber)
+        {
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["PriceSortParm"] = sortOrder == "Price" ? "price_desc" : "Price";
+            var movies = from s in _context.Movie
+                           select s;
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    movies = movies.OrderByDescending(s => s.Title);
+                    break;
+                case "Date":
+                    movies = movies.OrderBy(s => s.ReleaseDate);
+                    break;
+                case "date_desc":
+                    movies = movies.OrderByDescending(s => s.ReleaseDate);
+                    break;
+                case "Price":
+                    movies = movies.OrderBy(s => s.Price);
+                    break;
+                case "price_desc":
+                    movies = movies.OrderByDescending(s => s.Price);
+                    break;
+
+                default:
+                    movies = movies.OrderBy(s => s.Id);
+                    break;
+            }
+            int pageSize = 3;
+            return View(await PaginatedList<Movie>.CreateAsync(movies.AsNoTracking(), pageNumber ?? 1, pageSize));
+         
         }
 
         // GET: Movies/Details/5

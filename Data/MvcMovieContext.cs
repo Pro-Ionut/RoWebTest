@@ -15,5 +15,6 @@ namespace RoWebTest.Data
         }
 
         public DbSet<Movie> Movie { get; set; }
+        public DbSet<Reviews> Reviews { get; set; }
     }
 }

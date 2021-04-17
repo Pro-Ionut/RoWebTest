@@ -6,17 +6,18 @@ using System.Threading.Tasks;
 
 namespace RoWebTest.Models
 {
-    public class Movie
+    public class Reviews
     {
+
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string Movie_Id { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime ReleaseDate { get; set; }
-        public string Genre { get; set; }
-        public decimal Price { get; set; }
-        public string Producer { get; set; }
+        public DateTime ReviewDate { get; set; }
+        public string Data { get; set; }
+        
 
-      
+
+
     }
 }
