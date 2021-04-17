@@ -17,6 +17,6 @@ namespace RoWebTest.Models
         public decimal Price { get; set; }
         public string Producer { get; set; }
 
-        
+      
     }
 }

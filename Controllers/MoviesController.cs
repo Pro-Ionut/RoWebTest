@@ -20,9 +20,44 @@ namespace RoWebTest.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index()
+        
+        private IQueryable<Movie> AsNoTracking()
         {
-            return View(await _context.Movie.ToListAsync());
+            throw new NotImplementedException();
+        }
+
+        public async Task<IActionResult> Index(string sortOrder, int? pageNumber)
+        {
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["PriceSortParm"] = sortOrder == "Price" ? "price_desc" : "Price";
+            var movies = from s in _context.Movie
+                           select s;
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    movies = movies.OrderByDescending(s => s.Title);
+                    break;
+                case "Date":
+                    movies = movies.OrderBy(s => s.ReleaseDate);
+                    break;
+                case "date_desc":
+                    movies = movies.OrderByDescending(s => s.ReleaseDate);
+                    break;
+                case "Price":
+                    movies = movies.OrderBy(s => s.Price);
+                    break;
+                case "price_desc":
+                    movies = movies.OrderByDescending(s => s.Price);
+                    break;
+
+                default:
+                    movies = movies.OrderBy(s => s.Id);
+                    break;
+            }
+            int pageSize = 3;
+            return View(await PaginatedList<Movie>.CreateAsync(movies.AsNoTracking(), pageNumber ?? 1, pageSize));
+         
         }
 
         // GET: Movies/Details/5
@@ -30,7 +65,7 @@ namespace RoWebTest.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                      return NotFound();
             }
 
             var movie = await _context.Movie
@@ -40,7 +75,7 @@ namespace RoWebTest.Controllers
                 return NotFound();
             }
 
-            return View(movie);
+            return  View(movie);
         }
 
         // GET: Movies/Create
@@ -63,7 +98,26 @@ namespace RoWebTest.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(movie);
+
         }
+
+        // POST: Movies/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create_Review([Bind("Id,Movie_Id,ReviewDate,Name,Text")] Reviews review)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(review);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Details));
+            }
+            return View(review);
+        }
+
+
 
         // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(int? id)
